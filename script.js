@@ -43,4 +43,31 @@ searchBar.addEventListener("keyup", (event) => {
     : (searchNum.innerText = `Found ${filteredEpisodes.length} out of ${allEpisodes.length} episodes`);
 });
 
+const allEpisodes = getAllEpisodes();
+allEpisodes.forEach((episode) => {
+  const episodeOption = document.createElement("option");
+  episodeOption.value = episode.id;
+  episodeOption.textContent = ` S${episode.season
+    .toString()
+    .padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${
+    episode.name
+  } `;
+  const selectedSearch = document.getElementById("selectionOfEpisodes");
+  selectedSearch.appendChild(episodeOption);
+});
+
+const selectedSearch = document.getElementById("selectionOfEpisodes");
+selectedSearch.addEventListener("change", (event) => {
+  const episodeId = event.target.value;
+  if (episodeId == 00) {
+    makePageForEpisodes(allEpisodes);
+  } else {
+    const filteredEpisodes = allEpisodes.filter(
+      (episode) => episode.id == episodeId
+    );
+
+    makePageForEpisodes(filteredEpisodes);
+  }
+});
+
 window.onload = setup;
