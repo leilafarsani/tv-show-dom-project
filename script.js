@@ -6,14 +6,14 @@ function setup() {
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
-  //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  rootElem.innerHTML = "";
   episodeList.forEach((episode) => {
     const episodeDiv = document.createElement("div");
     const title = document.createElement("h2");
     episodeDiv.appendChild(title);
-    episode.number < 10 && episode.season < 10
-      ? (title.textContent = `${episode.name} S0${episode.number}E0${episode.season}`)
-      : (title.textContent = `${episode.name} S${episode.number}E${episode.season}`);
+    title.textContent = `${episode.name} S${episode.season
+      .toString()
+      .padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}`;
     rootElem.appendChild(episodeDiv);
 
     const image = document.createElement("img");
@@ -25,5 +25,22 @@ function makePageForEpisodes(episodeList) {
     rootElem.appendChild(summary);
   });
 }
+const searchBar = document.getElementById("search");
+
+searchBar.addEventListener("keyup", (event) => {
+  const searchChar = event.target.value.toLowerCase();
+  const allEpisodes = getAllEpisodes();
+  const filteredEpisodes = allEpisodes.filter((episode) => {
+    return (
+      episode.name.toLowerCase().includes(searchChar) ||
+      episode.summary.toLowerCase().includes(searchChar)
+    );
+  });
+  makePageForEpisodes(filteredEpisodes);
+  const searchNum = document.getElementById("searchNum");
+  searchChar === ""
+    ? (searchNum.innerText = " ")
+    : (searchNum.innerText = `Found ${filteredEpisodes.length} out of ${allEpisodes.length} episodes`);
+});
 
 window.onload = setup;
